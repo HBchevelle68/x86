@@ -59,7 +59,14 @@ pback:
 	mov edx, [len]
 	int 80h
 
+<<<<<<< HEAD:echo.asm
 	                    ;return 0
 	mov eax, 1          ;syscall 1 - exit()
   mov ebx, 0          ;return val
   int 80h             ;syscall interupt
+=======
+	                  ;return 0
+	mov eax, 1        ;syscall 1 - exit()
+    mov ebx, 0        ;return val
+    int 80h           ;syscall interupt 
+>>>>>>> 1081b7825f74bf20bb9690bb1771bce6ea7e8225:echoname.asm
