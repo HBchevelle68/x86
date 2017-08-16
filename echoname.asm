@@ -1,7 +1,7 @@
 global _start
 
 section .data
-	msg: db "Enter your name: "	;Print to user
+	msg: db "Enter your name: ", 0;Print to user
 	.len: equ $ - msg
 
 	buffer: times 64 db 0  ;Reserve 64 bytes, values set to 0
@@ -68,5 +68,5 @@ pback:
 	                  ;return 0
 	mov eax, 1        ;syscall 1 - exit()
     mov ebx, 0        ;return val
-    int 80h           ;syscall interupt 
+    int 80h           ;syscall interupt
 >>>>>>> 1081b7825f74bf20bb9690bb1771bce6ea7e8225:echoname.asm
