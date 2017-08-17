@@ -23,7 +23,7 @@ _start:
 	int 80h			        ;syscall interupt
 
 	                    ;Read input
-	mov eax, 0x3	      ;syscall 3 - read()
+	mov eax, 0x3	      ;syscall 4 - write()
 	mov ebx, 0x0	      ;file desc 0 - stdin
 	mov ecx, buffer     ;dst buffer
 	mov edx, 64         ;length of buffer
