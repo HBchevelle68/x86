@@ -122,12 +122,4 @@ closefile:
   mov eax, 1        ;syscall 1 - exit()
   mov ebx, 0        ;return val
   int 80h           ;syscall interupt
-=======
-  mov ebx, fname
 
-
-
-userin:
-
-
->>>>>>> 4fc05cfa0507ba04f7ee68aaf4b00eec7d37a47c
