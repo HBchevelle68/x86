@@ -12,8 +12,8 @@ echoname: echoname.asm
 	ld -melf_i386 echoname.o -o echoname
 
 writefile: writefile.asm
-	nasm -f elf writefile.asm
-	ld -melf_i386 writefile.o -o writefile
+	nasm -f elf -g writefile.asm
+	ld -melf_i386 -g writefile.o -o writefile
 
 clean:
 	rm *.o helloWorld echoname writefile
