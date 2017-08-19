@@ -7,7 +7,7 @@ section .data
   buff:  times 200 db 0  ;array for user string
   .blen: equ $ - buff
   fname: times 200 db 0 ;array for filename
-  .flen: equ $ - buff
+  .flen: equ $ - fname
 
   ;modes
   O_RDONLY: db 0        ;read-only
@@ -64,13 +64,10 @@ clean1:               ;loop to clear excess input, if any
 
 
 fileopen:
-  mov eax, 0x05
-<<<<<<< HEAD
+  mov eax, 0x08       ;create file
   mov ebx, fname      ;filename
-  or  ecx, O_CREAT    ;if it doesn't exist create the file
-  or  ecx, O_TRUNC    ;truncate
-  mov edx, O_WRONLY   ;write only
-  int 80h             ;syscall interupt
+  mov ecx, 0666       ;rw-rw-rw
+  int 80h
   mov [fd], eax       ;save file descripor
 
 prompt2:
@@ -122,4 +119,3 @@ closefile:
   mov eax, 1        ;syscall 1 - exit()
   mov ebx, 0        ;return val
   int 80h           ;syscall interupt
-
