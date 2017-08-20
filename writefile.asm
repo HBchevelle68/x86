@@ -4,9 +4,9 @@ section .data
   .len:  equ $ - fmsg
   umsg:  db "Enter message: ", 0
   .len:  equ $ - umsg
-  buff:  times 200 db 0  ;array for user string
+  buff:  times 50 db 0  ;array for user string
   .blen: equ $ - buff
-  fname: times 200 db 0 ;array for filename
+  fname: times 50 db 0 ;array for filename
   .flen: equ $ - fname
 
   ;modes
@@ -62,12 +62,13 @@ clean1:               ;loop to clear excess input, if any
   cmp al, 10          ;is it = to lf ?
   jne clean1          ;no, jump to begining of loop
 
-
 fileopen:
-  mov eax, 0x08       ;create file
+  mov eax, 0x05
   mov ebx, fname      ;filename
-  mov ecx, 0666       ;rw-rw-rw
-  int 80h
+  or  ecx, O_CREAT    ;if it doesn't exist create the file
+  or  ecx, O_TRUNC    ;truncate
+  mov edx, O_WRONLY   ;write only
+  int 80h             ;syscall interupt
   mov [fd], eax       ;save file descripor
 
 prompt2:
@@ -89,7 +90,7 @@ userin:
   mov bl, [ecx+eax-1]   ;grab last byte @ last index before '\0'
   cmp bl, 10            ;does it = '\n' ?
   je  clean2
-  inc DWORD [bret]       ;len++
+  inc DWORD [bret]      ;len++
 
 clean2:               ;loop to clear excess input, if any
   mov eax, 0x3        ;syscall 3 - read()
@@ -115,7 +116,8 @@ closefile:
   mov eax, 0x6	    ;syscall 6 - close()
   mov ebx, [fd]	    ;file desc
   int 80h
-                    ;return 0
+
+exit:               ;return 0
   mov eax, 1        ;syscall 1 - exit()
   mov ebx, 0        ;return val
   int 80h           ;syscall interupt
