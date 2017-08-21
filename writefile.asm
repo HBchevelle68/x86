@@ -9,15 +9,16 @@ section .data
   fname: times 50 db 0 ;array for filename
   .flen: equ $ - fname
 
+section .rodata
   ;modes
-  O_RDONLY: db 0        ;read-only
-  O_WRONLY: db 1        ;wirte-only
-  O_RDWR:   db 2        ;read and write
+  O_RDONLY: equ 0        ;read-only
+  O_WRONLY: equ 1        ;wirte-only
+  O_RDWR:   equ 2        ;read and write
 
   ;flags
-  O_CREAT:  dw 100o     ;create file if file doesnt exists
-  O_TRUNC:  dw 1000o    ;truncate file
-  O_APPEND: dw 2000o    ;append to file
+  O_CREAT:  equ 100o     ;create file if file doesnt exists
+  O_TRUNC:  equ 1000o    ;truncate file
+  O_APPEND: equ 2000o    ;append to file
 
 
 section .bss
@@ -63,13 +64,15 @@ clean1:               ;loop to clear excess input, if any
   jne clean1          ;no, jump to begining of loop
 
 fileopen:
-  mov eax, 0x05
-  mov ebx, fname      ;filename
-  or  ecx, O_CREAT    ;if it doesn't exist create the file
-  or  ecx, O_TRUNC    ;truncate
-  mov edx, O_WRONLY   ;write only
-  int 80h             ;syscall interupt
-  mov [fd], eax       ;save file descripor
+  mov eax, [fret]                     ;load length of filename
+  mov ebx, fname                      ;load filename address
+  mov BYTE [ebx+eax-1], 0             ;null terminate it
+  mov eax, 0x05                       ;syscall 5 - open()
+  mov ebx, fname                      ;filename
+  mov ecx, O_CREAT | O_TRUNC | O_RDWR ;flags/mode
+  mov edx, 0666o                      ;read/write only
+  int 80h                             ;syscall interupt
+  mov [fd], eax                       ;save file descripor
 
 prompt2:
   mov eax, 0x4	       ;syscall 4 - write()
