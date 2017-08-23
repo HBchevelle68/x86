@@ -1,4 +1,4 @@
-OBJS = hello echoname writefile restart
+OBJS = hello echoname writefile fcopy
 
 
 all: $(OBJS)
@@ -15,9 +15,9 @@ writefile: writefile.asm
 	nasm -f elf writefile.asm
 	ld -melf_i386 writefile.o -o writefile
 
-restart: restart.asm
-	nasm -f elf restart.asm
-	ld -melf_i386 restart.o -o restart
+fcopy: fcopy.asm
+	nasm -f elf fcopy.asm
+	ld -melf_i386 fcopy.o -o fcopy
 
 clean:
-	rm *.o helloWorld echoname writefile restart
+	rm *.o helloWorld echoname writefile fcopy

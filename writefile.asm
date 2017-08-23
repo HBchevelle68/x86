@@ -70,7 +70,7 @@ fileopen:
   mov eax, 0x05                       ;syscall 5 - open()
   mov ebx, fname                      ;filename
   mov ecx, O_CREAT | O_TRUNC | O_RDWR ;flags/mode
-  mov edx, 0666o                      ;read/write only
+  mov edx, 0666o                      ;read/write permissions only
   int 80h                             ;syscall interupt
   mov [fd], eax                       ;save file descripor
 
