@@ -1,6 +1,8 @@
 global _start
 
 section .data
+  buff:  times 50 db 0
+    .len: equ $ - buff
   f1: db "Test1.txt", 0
     .len: equ $ - f1
   f2: db "Test2.txt", 0
@@ -9,6 +11,7 @@ section .data
     .len: equ $ - err1
   err2: db "Error opening file 2", 0x0a
     .len: equ $ - err2
+
 
 section .rodata
   ;modes
@@ -29,10 +32,11 @@ section .bss
 
 section .text
 _start:
-
+  nop
+  nop
   mov eax, 0x5
   mov ebx, f1
-  mov ecx, O_RDWR | O_CREAT | O_APPEND  ;flags/mode
+  mov ecx, O_RDONLY  ;flags/mode
   int 80h
   cmp eax, 0
   jb error1
@@ -40,7 +44,7 @@ _start:
 
   mov eax, 0x5
   mov ebx, f2
-  mov ecx, O_RDWR | O_CREAT | O_TRUNC  ;flags/mode
+  mov ecx, O_WRONLY | O_CREAT | O_TRUNC  ;flags/mode
   mov edx, 0666o
   int 80h
   cmp eax, 0
@@ -59,13 +63,22 @@ while:
   jmp while
 
 break:
-  mov eax, 0xbb
+
+  mov eax, 0x3
+  mov ebx, [fd1]
+  mov ecx, buff
+  mov edx, buff.len
+  int 80h
+  mov edx, buff
+  mov ecx, [sz]
+  mov BYTE [edx + ecx], 0x0
+  mov eax, 0x4
   mov ebx, [fd2]
-  mov ecx, [fd1]
-  mov edx, 0
-  mov esi, [sz]
+  mov ecx, buff
+  mov edx, [sz]
   int 80h
 
+clean:
   mov eax, 0x6
   mov ebx, [fd1]
   int 80h
@@ -84,6 +97,7 @@ error1:
   mov ecx, err1
   mov edx, err1.len
   int 80h
+  ;jmp nodata
 
 error2:
   mov eax, 0x4
@@ -91,3 +105,4 @@ error2:
   mov ecx, err2
   mov edx, err2.len
   int 80h
+  ;jmp nodata

@@ -16,8 +16,8 @@ writefile: writefile.asm
 	ld -melf_i386 writefile.o -o writefile
 
 fcopy: fcopy.asm
-	nasm -f elf fcopy.asm
-	ld -melf_i386 fcopy.o -o fcopy
+	nasm -f elf -g fcopy.asm
+	ld -melf_i386 -g fcopy.o -o fcopy
 
 clean:
 	rm *.o helloWorld echoname writefile fcopy
