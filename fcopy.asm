@@ -24,6 +24,10 @@ section .rodata
   O_TRUNC:  equ 1000o    ;truncate file
   O_APPEND: equ 2000o    ;append to file
 
+  SEEK_SET:	equ 0	       ;set file offset to offset
+  SEEK_CUR:	equ 1	       ;set file offset to current plus offset
+  SEEK_END: equ	2	       ;set file offset to EOF plus offset
+
 section .bss
   fd1:  resd 1
   fd2:  resd 1
@@ -45,9 +49,9 @@ _start:
   mov eax, 0x5
   mov ebx, f2
   mov ecx, O_WRONLY | O_CREAT | O_TRUNC  ;flags/mode
-  mov edx, 0666o
+  mov edx, 0666o            ;file permissions
   int 80h
-  cmp eax, 0
+  cmp eax, 0                ;check ret for errors
   jb error2
   mov [fd2], eax
 
@@ -55,30 +59,34 @@ while:
   mov eax, 0x3
   mov ebx, [fd1]
   mov ecx, tmp
-  mov edx, 0x1   ; read 1 byte
+  mov edx, 0x1              ;read 1 byte
   int 80h
-  test eax, eax  ; EOF?
-  jz break       ; if EOF jump out
-  inc DWORD [sz] ; otherwise increment and loop
-  jmp while
+  test eax, eax             ;EOF?
+  jz break                  ;if EOF jump out
+  inc DWORD [sz]            ;otherwise increment and loop
+  jmp while                 ;begin loop
 
 break:
-
-  mov eax, 0x3
-  mov ebx, [fd1]
-  mov ecx, buff
-  mov edx, buff.len
+  mov eax, 0x13             ;lseek sys call
+  mov ebx, [fd1]            ;file desc 1
+  mov ecx, 0x0              ;file offset to go to
+  mov edx, SEEK_SET         ;set file pointer back to position pointed to by ecx
   int 80h
-  mov edx, buff
-  mov ecx, [sz]
-  mov BYTE [edx + ecx], 0x0
-  mov eax, 0x4
-  mov ebx, [fd2]
-  mov ecx, buff
-  mov edx, [sz]
+  mov eax, 0x3              ;read syscall
+  mov ebx, [fd1]            ;file desc 1
+  mov ecx, buff             ;buffer to read into
+  mov edx, [sz]             ;read [sz] amount of bytes into buffer
+  int 80h
+  mov edx, buff             ;buffer
+  mov ecx, [sz]             ;size of buffer in bytes
+  mov BYTE [edx + ecx], 0x0 ;null terminate end of buffer
+  mov eax, 0x4              ;write syscall
+  mov ebx, [fd2]            ;file desc 2
+  mov ecx, buff             ;buffer containing string
+  mov edx, [sz]             ;num bytes to write
   int 80h
 
-clean:
+clean:                      ;close up files and exit(0)
   mov eax, 0x6
   mov ebx, [fd1]
   int 80h
@@ -91,13 +99,13 @@ clean:
   int 80h
 
 
-error1:
+error1:                      ;print errors
   mov eax, 0x4
   mov ebx, 0x1
   mov ecx, err1
   mov edx, err1.len
   int 80h
-  ;jmp nodata
+  jmp clean
 
 error2:
   mov eax, 0x4
@@ -105,4 +113,4 @@ error2:
   mov ecx, err2
   mov edx, err2.len
   int 80h
-  ;jmp nodata
+  jmp clean
