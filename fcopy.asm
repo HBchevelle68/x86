@@ -31,8 +31,9 @@ section .rodata
 section .bss
   fd1:  resd 1
   fd2:  resd 1
-  tmp:  resd 1
   sz:   resd 1
+  tmp:  resb 1
+
 
 section .text
 _start:
