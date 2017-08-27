@@ -1,6 +1,6 @@
-global _start
+global main
 ; glibc stuff
-extern _malloc, _free
+extern malloc, free
 
 section .data
   err: db "malloc failed!", 10, 0
@@ -10,10 +10,10 @@ section .bss
   mptr resd 1   ;pointer to begining of malloc'd memory
 
 section .text
-_start:
+main:
 
   push 20       ;allocate 20 bytes
-  call _malloc  ;call malloc
+  call malloc  ;call malloc
   add esp, 4    ;clean pushed imm
 
   test eax, eax ;check for malloc error
@@ -24,8 +24,8 @@ _start:
   mov byte [eax], 0
   mov byte [eax + 1], 1
 
-  push mptr     ;push address
-  call _free    ;call free
+  push dword [mptr]     ;push address
+  call free    ;call free
   add esp, 4    ;clean push
 
 exit:
