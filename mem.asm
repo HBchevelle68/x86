@@ -13,7 +13,7 @@ section .text
 main:
 
   push 20       ;allocate 20 bytes
-  call malloc  ;call malloc
+  call malloc   ;call malloc
   add esp, 4    ;clean pushed imm
 
   test eax, eax ;check for malloc error
@@ -25,8 +25,8 @@ main:
   mov byte [eax + 1], 1
 
   push dword [mptr]     ;push address
-  call free    ;call free
-  add esp, 4    ;clean push
+  call free             ;call free
+  add esp, 4            ;clean push
 
 exit:
   mov eax, 0x1
