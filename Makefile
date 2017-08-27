@@ -23,5 +23,9 @@ mem: learnmalloc/mem.asm
 	nasm -f elf learnmalloc/mem.asm
 	gcc -m32 learnmalloc/mem.o -o learnmalloc/mem
 
+addr: addr.asm
+	nasm -f elf addr.asm
+	gcc -m32 addr.o -o addr
+
 clean:
-	
+	rm *.0 addr
