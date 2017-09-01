@@ -23,7 +23,7 @@ _printaddr:
   push edi         ;save registers that function will use
 
   ;Begin actual function
-  mov edi, [ebp+4] ;grab param 1 and move into local 1 (variable)
+  mov edi, [ebp+8] ;grab param 1 and move into local 1 (variable)
   push DWORD edi
   push msg
   call printf
