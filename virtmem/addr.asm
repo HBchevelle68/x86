@@ -9,8 +9,7 @@ section .bss
 
 section .text
 main:
-  mov DWORD eax, location
-  push DWORD eax
+  push DWORD location
 
   call _printaddr
   add esp, 4
@@ -21,7 +20,6 @@ main:
 _printaddr:
   push ebp         ;save the base pointer
   mov ebp, esp     ;move the stack pointer into base pointer
-  ;sub esp, DWORD*1 ;allocate room on the stack for 1 4 byte local variables
   push edi         ;save registers that function will use
 
   ;Begin actual function
