@@ -10,7 +10,6 @@ section .bss
 section .text
 main:
   push DWORD location
-
   call _printaddr
   add esp, 4
 
