@@ -28,8 +28,8 @@ addr: virtmem/addr.asm
 	gcc -m32 virtmem/addr.o -o virtmem/addr
 
 server: server.asm
-	nasm -f elf server.asm
-	ld -melf_i386 server.o -o server
+	nasm -f  elf -g server.asm
+	ld -melf_i386 -g server.o -o server
 
 clean:
-	rm *.0 addr
+	rm *.o server
