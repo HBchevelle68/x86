@@ -81,6 +81,7 @@ listen:;listen(sockfd, 5)
   push DWORD [fd] ;file descriptor
   mov ecx, esp ;ptr to args
   int 80h
+  add esp, 8 ;clean stack
   mov eax, 0x4
   mov ebx, 0x1
   mov ecx, listening
@@ -95,6 +96,7 @@ accept:;accept(sockfd, (struct sockaddr*) NULL, NULL)
   push DWORD [fd] ;file descriptor
   mov ecx, esp
   int 80h
+  add esp, 12 ;clean stack
   mov [cli_fd], eax ;save file descriptor
   mov eax, 0x4
   mov ebx, 0x1
